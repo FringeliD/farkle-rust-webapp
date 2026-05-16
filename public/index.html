@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Farkle</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Single-player dice</p>
+        <h1>Farkle</h1>
+      </div>
+      <button id="newGame" class="ghost-button" type="button">New game</button>
+    </header>
+
+    <section id="winBanner" class="win-banner hidden">
+      <strong>You won!</strong>
+      <span>Start a new game whenever you want another run.</span>
+    </section>
+
+    <section class="score-grid" aria-label="Scores">
+      <article>
+        <span>Total</span>
+        <strong id="totalScore">0</strong>
+      </article>
+      <article>
+        <span>Turn</span>
+        <strong id="turnScore">0</strong>
+      </article>
+      <article>
+        <span>Target</span>
+        <strong id="targetScore">10000</strong>
+      </article>
+      <article>
+        <span>Remaining</span>
+        <strong id="remainingDice">6</strong>
+      </article>
+    </section>
+
+    <section class="table">
+      <div id="dice" class="dice-grid" aria-label="Dice"></div>
+      <p id="message" class="message">Loading...</p>
+      <div class="actions">
+        <button id="rollButton" class="primary-button" type="button">Roll</button>
+        <button id="keepButton" class="secondary-button" type="button">Keep selected</button>
+        <button id="bankButton" class="secondary-button" type="button">Bank score</button>
+        <button id="resetButton" class="danger-button" type="button">Reset save</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <details open>
+        <summary>Rules</summary>
+        <div class="rules">
+          <p>Roll six dice. Keep at least one complete scoring selection, then roll again or bank the turn score.</p>
+          <p>Singles: each 1 scores 100, each 5 scores 50.</p>
+          <p>Three of a kind scores 1000 for ones, or face value x 100 for twos through sixes. Four, five, and six of a kind multiply that base by 2, 4, and 8.</p>
+          <p>Special six-dice scores: straight, three pairs, and four of a kind plus a pair score 1500. Two triplets score 2500.</p>
+          <p>If all six dice score, hot dice lets you roll all six again in the same turn. A Farkle loses the current turn score.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel">
+      <h2>Game log</h2>
+      <ol id="log" class="log"></ol>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

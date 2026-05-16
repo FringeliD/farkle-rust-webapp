@@ -1,0 +1,22 @@
+{
+  "total_score": 0,
+  "turn_score": 0,
+  "target_score": 10000,
+  "dice": [
+    { "id": 0, "value": null, "status": "empty" },
+    { "id": 1, "value": null, "status": "empty" },
+    { "id": 2, "value": null, "status": "empty" },
+    { "id": 3, "value": null, "status": "empty" },
+    { "id": 4, "value": null, "status": "empty" },
+    { "id": 5, "value": null, "status": "empty" }
+  ],
+  "selected_dice": [],
+  "locked_dice": [],
+  "can_roll": true,
+  "can_bank": false,
+  "is_bust": false,
+  "is_hot_dice": false,
+  "is_won": false,
+  "message": "Ready. Roll six dice to start.",
+  "log": []
+}
