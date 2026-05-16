@@ -7,7 +7,6 @@ const targetScoreEl = document.querySelector("#targetScore");
 const remainingDiceEl = document.querySelector("#remainingDice");
 const winBannerEl = document.querySelector("#winBanner");
 const rollButton = document.querySelector("#rollButton");
-const keepButton = document.querySelector("#keepButton");
 const bankButton = document.querySelector("#bankButton");
 const newGameButton = document.querySelector("#newGame");
 const resetButton = document.querySelector("#resetButton");
@@ -27,6 +26,17 @@ async function request(path, options = {}) {
   return response.ok;
 }
 
+async function keepPendingSelection() {
+  if (pendingSelection.size === 0) {
+    return true;
+  }
+
+  return request("/api/select", {
+    method: "POST",
+    body: JSON.stringify({ dice_ids: Array.from(pendingSelection) }),
+  });
+}
+
 function dieFace(value) {
   return value ? String(value) : ".";
 }
@@ -42,9 +52,10 @@ function render() {
   messageEl.textContent = state.message;
   winBannerEl.classList.toggle("hidden", !state.is_won);
 
-  rollButton.disabled = !state.can_roll || state.is_won;
-  keepButton.disabled = pendingSelection.size === 0 || state.can_roll || state.is_bust || state.is_won;
-  bankButton.disabled = !state.can_bank || state.is_bust || state.is_won;
+  const hasPendingSelection = pendingSelection.size > 0;
+  rollButton.textContent = state.can_roll ? "Roll" : "Keep & Roll";
+  rollButton.disabled = state.is_won || state.is_bust || (!state.can_roll && !hasPendingSelection);
+  bankButton.disabled = state.is_won || state.is_bust || (!state.can_bank && !hasPendingSelection);
 
   diceEl.innerHTML = "";
   state.dice.forEach((die) => {
@@ -78,12 +89,19 @@ async function toggleDie(id) {
   render();
 }
 
-rollButton.addEventListener("click", () => request("/api/roll", { method: "POST" }));
-keepButton.addEventListener("click", () => request("/api/select", {
-  method: "POST",
-  body: JSON.stringify({ dice_ids: Array.from(pendingSelection) }),
-}));
-bankButton.addEventListener("click", () => request("/api/bank", { method: "POST" }));
+rollButton.addEventListener("click", async () => {
+  if (!state.can_roll) {
+    const kept = await keepPendingSelection();
+    if (!kept) return;
+  }
+  await request("/api/roll", { method: "POST" });
+});
+
+bankButton.addEventListener("click", async () => {
+  const kept = await keepPendingSelection();
+  if (!kept) return;
+  await request("/api/bank", { method: "POST" });
+});
 newGameButton.addEventListener("click", () => request("/api/new", { method: "POST" }));
 resetButton.addEventListener("click", () => request("/api/reset", { method: "POST" }));
 
